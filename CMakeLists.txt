@@ -168,6 +168,9 @@ elseif (APPLE)
 elseif (LINUX)
   set(DOSBOX_PLATFORM_LINUX ON)
 
+elseif (GAMEKID)
+  set(DOSBOX_PLATFORM_LINUX ON)
+
 else()
   message(FATAL_ERROR "Unknown system ${CMAKE_SYSTEM_NAME}")
 endif()
@@ -403,7 +406,9 @@ set(C_COREFOUNDATION "${DOSBOX_PLATFORM_MACOS}")
 set(C_CORESERVICES   "${DOSBOX_PLATFORM_MACOS}")
 
 # Linux
-set(C_ALSA "${DOSBOX_PLATFORM_LINUX}")
+if(NOT GAMEKID)
+  set(C_ALSA "${DOSBOX_PLATFORM_LINUX}")
+endif()
 
 # Windows
 if (DOSBOX_PLATFORM_WINDOWS)
