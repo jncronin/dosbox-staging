@@ -713,7 +713,7 @@ MidiDeviceFluidSynth::MidiDeviceFluidSynth()
 	// Use a 7th-order (highest) polynomial to generate MIDI channel
 	// waveforms
 	fluid_synth_set_interp_method(fluid_synth.get(),
-								  FxGroup,
+								  AllFxGroups,
 								  FLUID_INTERP_HIGHEST);
 
 	SetChorus();
