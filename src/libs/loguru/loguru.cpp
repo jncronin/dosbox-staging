@@ -698,7 +698,9 @@ namespace loguru
 		VLOG_F(g_internal_verbosity, "stderr verbosity: " LOGURU_FMT(d) "", g_stderr_verbosity);
 		VLOG_F(g_internal_verbosity, "-----------------------------------");
 
+#ifndef __GAMEKID__
 		install_signal_handlers(options.signal_options);
+#endif
 
 		atexit(on_atexit);
 	}
