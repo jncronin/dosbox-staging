@@ -567,3 +567,15 @@ add_custom_target(clean-manual
 # Add installation rules
 include(cmake/add_install_rules.cmake)
 add_install_rules()
+
+if(GAMEKID)
+  target_link_libraries(dosbox
+  PRIVATE
+    opusfile
+    ogg
+    GKGL
+    GL
+  )
+
+  include(CPack)
+endif()

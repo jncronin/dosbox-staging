@@ -71,8 +71,10 @@
 #include "shell/autoexec.h"
 #include "shell/shell.h"
 #include "utils/math_utils.h"
+#ifndef __GAMEKID__
 #include "webserver/webserver.h"
-#include "webserver/bridge.h"
+#include "webserver/bridge.h"#
+#endif
 
 MachineType machine   = MachineType::None;
 SvgaType    svga_type = SvgaType::None;
@@ -116,9 +118,11 @@ static Bitu normal_loop()
 
 	while (true) {
 		if (PIC_RunQueue()) {
+#ifndef __GAMEKID__
 			if (WEBSERVER_IsEnabled()) {
 				Webserver::Bridge::Instance().ProcessRequests();
 			}
+#endif
 
 			ret = (*cpudecoder)();
 			if (ret < 0) {
@@ -1096,7 +1100,9 @@ void DOSBOX_InitModuleConfigsAndMessages()
 	IPX_AddConfigSection(control);
 
 	ETHERNET_AddConfigSection(control);
+#ifndef __GAMEKID__
 	WEBSERVER_AddConfigSection(control);
+#endif
 
 	control->AddAutoexecSection();
 
@@ -1162,14 +1168,18 @@ void DOSBOX_InitModules()
 	ETHERNET_Init();
 	VIRTUALBOX_Init();
 	VMWARE_Init();
+#ifndef __GAMEKID__
 	WEBSERVER_Init();
+#endif
 
 	AUTOEXEC_Init();
 }
 
 void DOSBOX_DestroyModules()
 {
+#ifndef __GAMEKID__
 	WEBSERVER_Destroy();
+#endif
 	VMWARE_Destroy();
 	VIRTUALBOX_Destroy();
 	ETHERNET_Destroy();

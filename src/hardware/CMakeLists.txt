@@ -36,7 +36,7 @@ target_sources(libdosboxcommon PRIVATE
   input/mouseif_virtual_machines.cpp
 
   network/ipx.cpp
-  network/ipxserver.cpp
+  #network/ipxserver.cpp
   network/ne2000.cpp
 
   serialport/misc_util.cpp

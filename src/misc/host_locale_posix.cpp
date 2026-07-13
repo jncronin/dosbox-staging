@@ -761,6 +761,11 @@ static const std::unordered_map<std::string, KeyboardLayoutMaybeCodepage> TtyToD
 
 static std::vector<std::string> get_command_output(const std::string& command)
 {
+#ifdef __GAMEKID__
+	(void)command;
+	std::vector<std::string> result = {};
+	return result;
+#else
 	const std::string PrefixNoLocale = "LC_ALL= LC_MESSAGES= LANG= LANGUAGE= ";
 	const std::string SuffixNoErrors = " 2>/dev/null";
 
@@ -784,6 +789,7 @@ static std::vector<std::string> get_command_output(const std::string& command)
 	free(buffer);
 	pclose(file_pointer);
 	return result;
+#endif
 }
 
 static std::pair<std::string, std::string> get_env_variable_from_list(

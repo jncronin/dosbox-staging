@@ -477,9 +477,13 @@ void ENETClientSocket::updateState()
 
 static void setup_tcp_socket(asio::ip::tcp::socket& socket)
 {
+#ifdef __GAMEKID__
+	(void)socket;
+#else
 	std::error_code ec;
 	socket.set_option(asio::ip::tcp::no_delay(true), ec);
 	(void)ec;
+#endif
 }
 
 TCPClientSocket::TCPClientSocket(asio::ip::tcp::socket&& new_socket,
@@ -496,6 +500,9 @@ TCPClientSocket::TCPClientSocket(int platformsocket)
         : io(std::make_shared<asio::io_context>()),
           socket(*io)
 {
+#ifdef __GAMEKID__
+	(void)platformsocket;
+#else
 	is_inherited_socket = true;
 	std::error_code ec;
 	socket.assign(asio::ip::tcp::v4(), platformsocket, ec);
@@ -504,6 +511,7 @@ TCPClientSocket::TCPClientSocket(int platformsocket)
 	}
 	setup_tcp_socket(socket);
 	isopen = true;
+#endif
 }
 #endif
 
@@ -511,6 +519,10 @@ TCPClientSocket::TCPClientSocket(const char* destination, uint16_t port)
         : io(std::make_shared<asio::io_context>()),
           socket(*io)
 {
+#ifdef __GAMEKID__
+	(void)destination;
+	(void)port;
+#else
 	std::error_code ec;
 	asio::ip::tcp::resolver resolver(*io);
 	auto endpoints = resolver.resolve(destination, std::to_string(port), ec);
@@ -523,18 +535,25 @@ TCPClientSocket::TCPClientSocket(const char* destination, uint16_t port)
 	}
 	setup_tcp_socket(socket);
 	isopen = true;
+#endif
 }
 
 TCPClientSocket::~TCPClientSocket()
 {
+#ifndef __GAMEKID__
 	std::error_code ec;
 	if (socket.is_open()) {
 		socket.close(ec);
 	}
+#endif
 }
 
 bool TCPClientSocket::GetRemoteAddressString(char* buffer)
 {
+#ifdef __GAMEKID__
+	(void)buffer;
+	return false;
+#else
 	assert(buffer);
 	std::error_code ec;
 	const auto ep = socket.remote_endpoint(ec);
@@ -548,10 +567,16 @@ bool TCPClientSocket::GetRemoteAddressString(char* buffer)
 	const auto addr_str = addr.to_string();
 	std::snprintf(buffer, 128, "%s", addr_str.c_str());
 	return true;
+#endif
 }
 
 bool TCPClientSocket::ReceiveArray(uint8_t* data, size_t& n)
 {
+#ifdef __GAMEKID__
+	(void)data;
+	(void)n;
+	return false;
+#else
 	assert(data);
 	std::error_code ec;
 	const auto available = socket.available(ec);
@@ -573,10 +598,15 @@ bool TCPClientSocket::ReceiveArray(uint8_t* data, size_t& n)
 	}
 	n = bytes_read;
 	return true;
+#endif
 }
 
 SocketState TCPClientSocket::GetcharNonBlock(uint8_t& val)
 {
+#ifdef __GAMEKID__
+	(void)val;
+	return SocketState::Closed;
+#else
 	std::error_code ec;
 	const auto available = socket.available(ec);
 	if (ec) {
@@ -592,6 +622,7 @@ SocketState TCPClientSocket::GetcharNonBlock(uint8_t& val)
 		return SocketState::Closed;
 	}
 	return SocketState::Good;
+#endif
 }
 
 bool TCPClientSocket::Putchar(uint8_t val)
@@ -601,6 +632,11 @@ bool TCPClientSocket::Putchar(uint8_t val)
 
 bool TCPClientSocket::SendArray(const uint8_t* data, const size_t n)
 {
+#ifdef __GAMEKID__
+	(void)data;
+	(void)n;
+	return false;
+#else
 	assert(data);
 	std::error_code ec;
 	const auto bytes_sent = asio::write(socket, asio::buffer(data, n), ec);
@@ -609,12 +645,16 @@ bool TCPClientSocket::SendArray(const uint8_t* data, const size_t n)
 		return false;
 	}
 	return true;
+#endif
 }
 
 TCPServerSocket::TCPServerSocket(const uint16_t port)
         : io(std::make_shared<asio::io_context>()),
           acceptor(*io)
 {
+#ifdef __GAMEKID__
+	(void)port;
+#else
 	isopen = false;
 	if (!port) {
 		return;
@@ -640,18 +680,24 @@ TCPServerSocket::TCPServerSocket(const uint16_t port)
 		return;
 	}
 	isopen = true;
+#endif
 }
 
 TCPServerSocket::~TCPServerSocket()
 {
+#ifndef __GAMEKID__
 	std::error_code ec;
 	if (acceptor.is_open()) {
 		acceptor.close(ec);
 	}
+#endif
 }
 
 NETClientSocket* TCPServerSocket::Accept()
 {
+#ifdef __GAMEKID__
+	return nullptr;
+#else
 	if (!isopen || !acceptor.is_open()) {
 		return nullptr;
 	}
@@ -665,4 +711,5 @@ NETClientSocket* TCPServerSocket::Accept()
 		return nullptr;
 	}
 	return new TCPClientSocket(std::move(new_socket), io);
+#endif
 }

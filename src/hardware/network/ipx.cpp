@@ -6,6 +6,8 @@
 
 #include "hardware/network/ipx.h"
 
+#ifndef __GAMEKID__
+
 #include <cinttypes>
 #include <cstdio>
 #include <cstring>
@@ -1299,3 +1301,14 @@ void IPX_AddConfigSection([[maybe_unused]] const ConfigPtr& conf)
 
 // Initialize static members;
 uint16_t IPX::dospage = 0;
+
+#else
+void IPX_Init()
+{}
+
+void IPX_Destroy()
+{}
+
+void IPX_AddConfigSection([[maybe_unused]] const ConfigPtr& conf)
+{}
+#endif

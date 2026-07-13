@@ -29,7 +29,33 @@
 #ifndef ASIO_STANDALONE
 #define ASIO_STANDALONE
 #endif
+#ifdef __GAMEKID__
+namespace asio
+{
+	class io_context {};
+	
+	namespace ip
+	{
+		namespace tcp
+		{
+			class socket
+			{
+				public:
+					socket() {}
+					socket(const asio::io_context &) {}
+			};
+			class acceptor
+			{
+				public:
+					acceptor() {}
+					acceptor(const asio::io_context &) {}
+			};
+		}
+	}
+}
+#else
 #include <asio.hpp>
+#endif
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
