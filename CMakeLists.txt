@@ -577,5 +577,15 @@ if(GAMEKID)
     GL
   )
 
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+      # Replace -O3 with -Ofast in the default Release flags
+      string(REPLACE "-O3" "-Ofast" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+      
+      # Ensure -Ofast is used even if the default was different
+      if(NOT CMAKE_CXX_FLAGS_RELEASE MATCHES "-Ofast")
+          set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast")
+      endif()
+  endif()
+  
   include(CPack)
 endif()
