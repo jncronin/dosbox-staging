@@ -1138,7 +1138,9 @@ void DOSBOX_InitModules()
 	PCI_Init();
 
 	VOODOO_Init();
+#ifndef __GAMEKID__
 	CAPTURE_Init();
+#endif
 
 	MIXER_Init();
 	MIDI_Init();
@@ -1164,11 +1166,11 @@ void DOSBOX_InitModules()
 	SERIAL_Init();
 	DOS_Init();
 
+#ifndef __GAMEKID__
 	IPX_Init();
 	ETHERNET_Init();
 	VIRTUALBOX_Init();
 	VMWARE_Init();
-#ifndef __GAMEKID__
 	WEBSERVER_Init();
 #endif
 
