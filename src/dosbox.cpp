@@ -11,6 +11,10 @@
 #include <limits>
 #include <memory>
 
+#ifdef __GAMEKID__
+#include <gk.h>
+#endif
+
 #ifdef WIN32
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -739,6 +743,10 @@ static void dosbox_realinit(SectionProp& section)
 
 void DOSBOX_Init()
 {
+#ifdef __GAMEKID__
+	GK_SetGoldenThread(0);
+#endif
+
 	auto section = get_section("dosbox");
 	assert(section);
 
